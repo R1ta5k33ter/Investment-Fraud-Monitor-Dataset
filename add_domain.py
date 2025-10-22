@@ -82,8 +82,9 @@ def batch_add_domains():
     """Add multiple domains from a text file."""
     print("=== Batch Domain Addition ===")
     print("This tool allows you to add multiple domains from a text file.")
-    print("Each line should contain: domain,source_url,comments,flags")
-    print("Example: example.com,https://virustotal.com/example,Malicious site,phishing;botnet\n")
+    print("Each line should contain: domain,source_url,comments,flags,date_reported")
+    print("Example: example.com,https://virustotal.com/example,Malicious site,phishing;botnet,2024-01-15")
+    print("Note: date_reported is optional (will use today's date if not provided)\n")
     
     file_path = input("Enter path to text file: ").strip()
     if not file_path:
@@ -121,8 +122,9 @@ def batch_add_domains():
         source = parts[1]
         comments = parts[2] if len(parts) > 2 else ""
         flags = parts[3] if len(parts) > 3 else ""
+        date_reported = parts[4] if len(parts) > 4 else None
         
-        if dm.add_domain(domain, source, comments, flags):
+        if dm.add_domain(domain, source, comments, flags, date_reported):
             added_count += 1
         else:
             error_count += 1
@@ -317,12 +319,38 @@ def main():
         elif choice == '7':
             query = input("Enter search query: ").strip()
             if query:
-                field = input("Search field (domain/source/comments/flags) [domain]: ").strip().lower()
-                if field not in ['domain', 'source', 'comments', 'flags']:
-                    field = 'domain'
+                print("Search options:")
+                print("1. Search all fields (default)")
+                print("2. Search specific field")
+                
+                search_option = input("Choose option (1/2) [1]: ").strip()
                 
                 dm = DomainManager()
-                results = dm.search_domains(query, field)
+                
+                if search_option == '2':
+                    field = input("Search field (domain/source/comments/flags): ").strip().lower()
+                    if field not in ['domain', 'source', 'comments', 'flags']:
+                        print("Invalid field, searching all fields instead")
+                        field = 'all'
+                    else:
+                        results = dm.search_domains(query, field)
+                else:
+                    # Search all fields
+                    all_results = []
+                    for search_field in ['domain', 'source', 'comments', 'flags']:
+                        field_results = dm.search_domains(query, search_field)
+                        all_results.extend(field_results)
+                    
+                    # Remove duplicates based on domain
+                    seen_domains = set()
+                    unique_results = []
+                    for result in all_results:
+                        if result['domain'] not in seen_domains:
+                            unique_results.append(result)
+                            seen_domains.add(result['domain'])
+                    
+                    results = unique_results
+                
                 print(f"\nFound {len(results)} matching domains:")
                 for domain in results:
                     print(f"- {domain['domain']} ({domain['flags'] or 'no flags'})")

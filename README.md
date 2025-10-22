@@ -165,6 +165,22 @@ python3 domain_manager.py import-csv domains.csv
 python3 domain_manager.py import-csv domains.csv --skip-duplicates
 ```
 
+**CSV Import Format Requirements:**
+
+The CSV file must contain the following columns (in any order):
+- `domain` - The malicious domain (required)
+- `source` - Source URL (required)
+- `date_reported` - Date in YYYY-MM-DD format (optional)
+- `comments` - Free text comments (optional)
+- `flags` - Semicolon-separated flags (optional)
+
+**Example CSV:**
+```csv
+domain,source,date_reported,comments,flags
+example.com,https://virustotal.com/gui/domain/example.com,2024-01-15,Phishing site,phishing;botnet
+malware.com,https://virustotal.com/gui/domain/malware.com,2024-01-16,Malware distribution,malware
+```
+
 #### Export Blocklist
 
 ```bash
@@ -194,10 +210,27 @@ python3 migrate_to_sqlite.py domains.csv --verify
 
 Create a text file with domains (one per line, comma-separated):
 
+**Format:** `domain,source_url,comments,flags,date_reported`
+
+**Example:**
 ```
-example.com,https://virustotal.com/gui/domain/example.com,Phishing site,phishing;botnet
-malware.com,https://virustotal.com/gui/domain/malware.com,Malware distribution,malware
+example.com,https://virustotal.com/gui/domain/example.com,Phishing site,phishing;botnet,2024-01-15
+malware.com,https://virustotal.com/gui/domain/malware.com,Malware distribution,malware,2024-01-16
 ```
+
+**Required fields:**
+- `domain` - The malicious domain
+- `source_url` - Source URL (e.g., VirusTotal link)
+
+**Optional fields:**
+- `comments` - Free text comments
+- `flags` - Semicolon-separated flags (e.g., "phishing;botnet")
+- `date_reported` - Date in YYYY-MM-DD format (defaults to today if not provided)
+
+**Notes:**
+- Empty lines and lines starting with `#` are ignored
+- Fields can be empty but commas must be present
+- Date format must be YYYY-MM-DD if provided
 
 Then use the interactive mode to import the file, or use the CLI:
 

@@ -1,0 +1,3 @@
+x.com,NA,former twitter,
+a.com,google.com,not malicious,benign
+b.com,google.com,not malicious,benign
