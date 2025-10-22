@@ -1,0 +1,34 @@
+# Requirements for Investment Fraud Monitor Dataset
+# Core dependencies for domain management system
+
+# CSV handling and data manipulation
+# (Built into Python standard library - no external dependency needed)
+
+# Date and time handling
+# (Built into Python standard library - no external dependency needed)
+
+# Regular expressions for domain validation
+# (Built into Python standard library - no external dependency needed)
+
+# Path handling
+# (Built into Python standard library - no external dependency needed)
+
+# Command-line argument parsing
+# (Built into Python standard library - no external dependency needed)
+
+# Optional: Enhanced CSV handling and data analysis
+# pandas>=1.3.0
+# numpy>=1.20.0
+
+# Optional: Enhanced command-line interface
+# click>=8.0.0
+
+# Optional: Data validation
+# cerberus>=1.3.0
+
+# Optional: Logging enhancements
+# colorlog>=6.0.0
+
+# Note: This project uses only Python standard library modules
+# No external dependencies are required for basic functionality
+# Uncomment the optional dependencies above if you want enhanced features
